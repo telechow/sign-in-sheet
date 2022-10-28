@@ -15,6 +15,10 @@
  */
 package io.github.telechow.sign.in.sheet;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * 年度签到册接口
  *
@@ -60,4 +64,83 @@ public interface YearlySignInSheet extends SignInSheet {
      * @since 2022/10/28 10:44
      */
     int notSignInCountInWholeMonth(int monthOfYear);
+
+    /**
+     * 获取当前年度签到册中已签到的日期列表
+     *
+     * @return java.util.List<java.time.LocalDate> 当前年度签到册中已签到的日期列表
+     * @author Telechow
+     * @since 2022/10/28 16:07
+     */
+    List<LocalDate> listSignInDateInWholeYear();
+
+    /**
+     * 获取当前年度签到册中已签到的日期时间列表<br>
+     * 如果签到册不存储时间，只存储日期，则返回日期的00:00:00<br>
+     *
+     * @return java.util.List<java.time.LocalDateTime> 当前年度签到册中已签到的日期时间列表
+     * @author Telechow
+     * @since 2022/10/28 16:36
+     */
+    List<LocalDateTime> listSignInDateTimeInWholeYear();
+
+    /**
+     * 获取当前年度签到册中未签到的日期列表
+     *
+     * @return java.util.List<java.time.LocalDate> 当前年度签到册中未签到的日期列表
+     * @author Telechow
+     * @since 2022/10/28 16:12
+     */
+    List<LocalDate> listNotSignInDateInWholeYear();
+
+    /**
+     * 获取当前年度签到册中未签到的日期时间列表<br>
+     * 如果签到册不存储时间，只存储日期，则返回日期的00:00:00<br>
+     *
+     * @return java.util.List<java.time.LocalDateTime> 当前年度签到册中未签到的日期时间列表
+     * @author Telechow
+     * @since 2022/10/28 16:38
+     */
+    List<LocalDateTime> listNotSignInDateTimeInWholeYear();
+
+    /**
+     * 获取签到册中指定月份已签到的日期列表
+     *
+     * @param monthOfYear 月份，1-12
+     * @return java.util.List<java.time.LocalDate> 签到册中指定月份已签到的日期列表
+     * @author Telechow
+     * @since 2022/10/28 17:21
+     */
+    List<LocalDate> listSignInDateInWholeMonth(int monthOfYear);
+
+    /**
+     * 获取签到册中指定月份已签到的日期时间列表<br>
+     * 如果签到册不存储时间，只存储日期，则返回日期的00:00:00<br>
+     *
+     * @param monthOfYear 月份，1-12
+     * @return java.util.List<java.time.LocalDateTime> 签到册中指定月份已签到的日期时间列表
+     * @author Telechow
+     * @since 2022/10/28 17:26
+     */
+    List<LocalDateTime> listSignInDateTimeInWholeMonth(int monthOfYear);
+
+    /**
+     * 获取签到册中指定月份未签到的日期列表
+     *
+     * @param monthOfYear 月份，1-12
+     * @return java.util.List<java.time.LocalDate> 签到册中指定月份未签到的日期列表
+     * @author Telechow
+     * @since 2022/10/28 17:28
+     */
+    List<LocalDate> listNotSignInDateInWholeMonth(int monthOfYear);
+
+    /**
+     * 获取签到册中指定月份未签到的日期时间列表
+     *
+     * @param monthOfYear 月份，1-12
+     * @return java.util.List<java.time.LocalDateTime> 签到册中指定月份未签到的日期时间列表
+     * @author Telechow
+     * @since 2022/10/28 17:30
+     */
+    List<LocalDateTime> listNotSignInDateTimeInWholeMonth(int monthOfYear);
 }
