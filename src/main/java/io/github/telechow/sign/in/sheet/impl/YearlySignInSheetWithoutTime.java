@@ -181,30 +181,17 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
 
     @Override
     public int signInCountInWholeMonth(int monthOfYear) {
-        //1.构造月份
-        YearMonth yearMonth = YearMonth.of(this.year, monthOfYear);
+        //1.截取该月的bitset
+        BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
 
-        //2.截取该月的bitset
-        LocalDate firstDayOfMonth = yearMonth.atDay(1);
-        LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
-        BitSet monthBitSet = this.sheetBitSet.get(firstDayOfMonth.getDayOfYear() - 1, lastDayOfMonth.getDayOfYear());
-
-        //3.获取该月签到次数
+        //2.获取该月签到次数
         return monthBitSet.cardinality();
     }
 
     @Override
     public int notSignInCountInWholeMonth(int monthOfYear) {
-        //1.构造月份
-        YearMonth yearMonth = YearMonth.of(this.year, monthOfYear);
-
-        //2.截取该月的bitset
-        LocalDate firstDayOfMonth = yearMonth.atDay(1);
-        LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
-        BitSet monthBitSet = this.sheetBitSet.get(firstDayOfMonth.getDayOfYear() - 1, lastDayOfMonth.getDayOfYear());
-
-        //3.获取该月未签到次数
-        return yearMonth.lengthOfMonth() - monthBitSet.cardinality();
+        //未签到次数 = 当月天数 - 已签到次数
+        return YearMonth.of(this.year, monthOfYear).lengthOfMonth() - this.signInCountInWholeMonth(monthOfYear);
     }
 
     @Override
@@ -252,13 +239,10 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     @Override
     public List<LocalDate> listSignInDateInWholeMonth(int monthOfYear) {
         //1.截取该月的bitset
-        YearMonth yearMonth = YearMonth.of(this.year, monthOfYear);
-        LocalDate firstDayOfMonth = yearMonth.atDay(1);
-        LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
-        BitSet monthBitSet = this.sheetBitSet.get(firstDayOfMonth.getDayOfYear() - 1, lastDayOfMonth.getDayOfYear());
+        BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
 
         //2.过滤出结果
-        int offset = firstDayOfMonth.getDayOfYear();
+        int offset = LocalDate.of(this.year, monthOfYear, 1).getDayOfYear();
         return monthBitSet.stream()
                 .boxed()
                 .map(i -> LocalDate.ofYearDay(this.year, offset + i + 1))
@@ -268,13 +252,10 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     @Override
     public List<LocalDateTime> listSignInDateTimeInWholeMonth(int monthOfYear) {
         //1.截取该月的bitset
-        YearMonth yearMonth = YearMonth.of(this.year, monthOfYear);
-        LocalDate firstDayOfMonth = yearMonth.atDay(1);
-        LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
-        BitSet monthBitSet = this.sheetBitSet.get(firstDayOfMonth.getDayOfYear() - 1, lastDayOfMonth.getDayOfYear());
+        BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
 
         //2.过滤出结果
-        int offset = firstDayOfMonth.getDayOfYear();
+        int offset = LocalDate.of(this.year, monthOfYear, 1).getDayOfYear();
         return monthBitSet.stream()
                 .boxed()
                 .map(i -> LocalDateTime.of(LocalDate.ofYearDay(this.year, offset + i + 1), LocalTime.MIN))
@@ -284,17 +265,14 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     @Override
     public List<LocalDate> listNotSignInDateInWholeMonth(int monthOfYear) {
         //1.截取该月的bitset
-        YearMonth yearMonth = YearMonth.of(this.year, monthOfYear);
-        LocalDate firstDayOfMonth = yearMonth.atDay(1);
-        LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
-        BitSet monthBitSet = this.sheetBitSet.get(firstDayOfMonth.getDayOfYear() - 1, lastDayOfMonth.getDayOfYear());
+        BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
 
         //2.克隆bitset并翻转
         BitSet clone = (BitSet) monthBitSet.clone();
         clone.flip(0, clone.length());
 
         //3.过滤出结果
-        int offset = firstDayOfMonth.getDayOfYear();
+        int offset = LocalDate.of(this.year, monthOfYear, 1).getDayOfYear();
         return clone.stream()
                 .boxed()
                 .map(i -> LocalDate.ofYearDay(this.year, offset + i + 1))
@@ -304,17 +282,14 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     @Override
     public List<LocalDateTime> listNotSignInDateTimeInWholeMonth(int monthOfYear) {
         //1.截取该月的bitset
-        YearMonth yearMonth = YearMonth.of(this.year, monthOfYear);
-        LocalDate firstDayOfMonth = yearMonth.atDay(1);
-        LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
-        BitSet monthBitSet = this.sheetBitSet.get(firstDayOfMonth.getDayOfYear() - 1, lastDayOfMonth.getDayOfYear());
+        BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
 
         //2.克隆bitset并翻转
         BitSet clone = (BitSet) monthBitSet.clone();
         clone.flip(0, clone.length());
 
         //3.过滤出结果
-        int offset = firstDayOfMonth.getDayOfYear();
+        int offset = LocalDate.of(this.year, monthOfYear, 1).getDayOfYear();
         return clone.stream()
                 .boxed()
                 .map(i -> LocalDateTime.of(LocalDate.ofYearDay(this.year, offset + i + 1), LocalTime.MIN))
@@ -331,5 +306,22 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
         System.arraycopy(this.sheetBitSet.toByteArray(), 0
                 , bytes, SHORT_BYTE_LENGTH, this.sheetBitSet.toByteArray().length);
         return bytes;
+    }
+
+    /// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ private method ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    /**
+     * 截取指定月份的BitSet
+     *
+     * @param monthOfYear 月份，1-12
+     * @return java.util.BitSet 指定月份你的BitSet
+     * @author Telechow
+     * @since 2022/10/28 17:41
+     */
+    private BitSet interceptBitSetByMonth(int monthOfYear) {
+        YearMonth yearMonth = YearMonth.of(this.year, monthOfYear);
+        LocalDate firstDayOfMonth = yearMonth.atDay(1);
+        LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
+        return this.sheetBitSet.get(firstDayOfMonth.getDayOfYear() - 1, lastDayOfMonth.getDayOfYear());
     }
 }
