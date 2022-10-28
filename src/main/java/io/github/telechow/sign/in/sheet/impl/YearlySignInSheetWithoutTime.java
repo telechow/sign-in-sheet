@@ -149,6 +149,7 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
 
     @Override
     public int notSignInCountInWholeYear() {
+        //当年未签到次数 = 当年天数 - 当年已签到次数
         return Year.of(this.year).length() - this.sheetBitSet.cardinality();
     }
 
@@ -163,7 +164,7 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
 
     @Override
     public int notSignInCountInWholeMonth(int monthOfYear) {
-        //未签到次数 = 当月天数 - 已签到次数
+        //当月未签到次数 = 当月天数 - 当月已签到次数
         return YearMonth.of(this.year, monthOfYear).lengthOfMonth() - this.signInCountInWholeMonth(monthOfYear);
     }
 
