@@ -36,18 +36,6 @@ public interface SignInSheet {
     void signIn();
 
     /**
-     * 判断某年某月某日是否签到
-     *
-     * @param year        年
-     * @param monthOfYear 月，1-12
-     * @param dayOfMonth  日，1-31
-     * @return boolean false：当日未签到；true：当日已签到
-     * @author Telechow
-     * @since 2022/10/27 16:43
-     */
-    boolean isSignIn(int year, int monthOfYear, int dayOfMonth);
-
-    /**
      * 判断指定的日期是否签到
      *
      * @param localDate 指定日期，时区为当地时区
@@ -65,5 +53,21 @@ public interface SignInSheet {
      * @author Telechow
      * @since 2022/10/27 16:46
      */
-    boolean isSignIn(LocalDateTime localDateTime);
+    default boolean isSignIn(LocalDateTime localDateTime) {
+        return this.isSignIn(localDateTime.toLocalDate());
+    }
+
+    /**
+     * 判断某年某月某日是否签到
+     *
+     * @param year        年
+     * @param monthOfYear 月，1-12
+     * @param dayOfMonth  日，1-31
+     * @return boolean false：当日未签到；true：当日已签到
+     * @author Telechow
+     * @since 2022/10/27 16:43
+     */
+    default boolean isSignIn(int year, int monthOfYear, int dayOfMonth) {
+        return this.isSignIn(LocalDate.of(year, monthOfYear, dayOfMonth));
+    }
 }

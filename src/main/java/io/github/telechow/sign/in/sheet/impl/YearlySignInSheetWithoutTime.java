@@ -131,21 +131,6 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     }
 
     @Override
-    public boolean isSignIn(int year, int monthOfYear, int dayOfMonth) {
-        //1.构造出日期
-        LocalDate signDate = LocalDate.of(year, monthOfYear, dayOfMonth);
-
-        //2.判断年份是否和签到册的年份匹配，如果不匹配直接返回false
-        final boolean yearNotMatch = !Objects.equals(year, (int) this.year);
-        if (yearNotMatch) {
-            return false;
-        }
-
-        //3.从bitset中判断是否签到
-        return this.sheetBitSet.get(signDate.getDayOfYear() - 1);
-    }
-
-    @Override
     public boolean isSignIn(LocalDate localDate) {
         //1.判断年份是否和签到册的年份匹配，如果不匹配直接返回false
         final boolean yearNotMatch = !Objects.equals(localDate.getYear(), (int) this.year);
@@ -155,18 +140,6 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
 
         //2.从bitset中判断是否签到
         return this.sheetBitSet.get(localDate.getDayOfYear() - 1);
-    }
-
-    @Override
-    public boolean isSignIn(LocalDateTime localDateTime) {
-        //1.判断年份是否和签到册的年份匹配，如果不匹配直接返回false
-        final boolean yearNotMatch = !Objects.equals(localDateTime.getYear(), (int) this.year);
-        if (yearNotMatch) {
-            return false;
-        }
-
-        //2.从bitset中判断是否签到
-        return this.sheetBitSet.get(localDateTime.getDayOfYear() - 1);
     }
 
     @Override
