@@ -154,18 +154,18 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     }
 
     @Override
-    public int signInCountInWholeMonth(int monthOfYear) {
+    public int signInCountInWholeMonth(int month) {
         //1.截取该月的bitset
-        BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
+        BitSet monthBitSet = this.interceptBitSetByMonth(month);
 
         //2.获取该月签到次数
         return monthBitSet.cardinality();
     }
 
     @Override
-    public int notSignInCountInWholeMonth(int monthOfYear) {
+    public int notSignInCountInWholeMonth(int month) {
         //当月未签到次数 = 当月天数 - 当月已签到次数
-        return YearMonth.of(this.year, monthOfYear).lengthOfMonth() - this.signInCountInWholeMonth(monthOfYear);
+        return YearMonth.of(this.year, month).lengthOfMonth() - this.signInCountInWholeMonth(month);
     }
 
     @Override
@@ -189,12 +189,12 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     }
 
     @Override
-    public List<LocalDateTime> listSignInDateTimeInWholeMonth(int monthOfYear) {
+    public List<LocalDateTime> listSignInDateTimeInWholeMonth(int month) {
         //1.截取该月的bitset
-        BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
+        BitSet monthBitSet = this.interceptBitSetByMonth(month);
 
         //2.过滤出结果
-        int offset = LocalDate.of(this.year, monthOfYear, 1).getDayOfYear();
+        int offset = LocalDate.of(this.year, month, 1).getDayOfYear();
         return monthBitSet.stream()
                 .boxed()
                 .map(i -> LocalDateTime.of(LocalDate.ofYearDay(this.year, offset + i + 1), LocalTime.MIN))
@@ -202,15 +202,15 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     }
 
     @Override
-    public List<LocalDateTime> listNotSignInDateTimeInWholeMonth(int monthOfYear) {
+    public List<LocalDateTime> listNotSignInDateTimeInWholeMonth(int month) {
         //1.截取该月的bitset
-        BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
+        BitSet monthBitSet = this.interceptBitSetByMonth(month);
 
         //2.克隆bitset并翻转
         BitSet clone = this.cloneAndFlip(monthBitSet);
 
         //3.过滤出结果
-        int offset = LocalDate.of(this.year, monthOfYear, 1).getDayOfYear();
+        int offset = LocalDate.of(this.year, month, 1).getDayOfYear();
         return clone.stream()
                 .boxed()
                 .map(i -> LocalDateTime.of(LocalDate.ofYearDay(this.year, offset + i + 1), LocalTime.MIN))
@@ -234,13 +234,13 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     /**
      * 截取指定月份的BitSet
      *
-     * @param monthOfYear 月份，1-12
+     * @param month 月份，1-12
      * @return java.util.BitSet 指定月份你的BitSet
      * @author Telechow
      * @since 2022/10/28 17:41
      */
-    private BitSet interceptBitSetByMonth(int monthOfYear) {
-        YearMonth yearMonth = YearMonth.of(this.year, monthOfYear);
+    private BitSet interceptBitSetByMonth(int month) {
+        YearMonth yearMonth = YearMonth.of(this.year, month);
         LocalDate firstDayOfMonth = yearMonth.atDay(1);
         LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
         return this.sheetBitSet.get(firstDayOfMonth.getDayOfYear() - 1, lastDayOfMonth.getDayOfYear());

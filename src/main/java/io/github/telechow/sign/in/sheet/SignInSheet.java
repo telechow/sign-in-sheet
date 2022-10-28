@@ -61,13 +61,13 @@ public interface SignInSheet {
      * 判断某年某月某日是否签到
      *
      * @param year        年
-     * @param monthOfYear 月，1-12
+     * @param month 月，1-12
      * @param dayOfMonth  日，1-31
      * @return boolean false：当日未签到；true：当日已签到
      * @author Telechow
      * @since 2022/10/27 16:43
      */
-    default boolean isSignIn(int year, int monthOfYear, int dayOfMonth) {
-        return this.isSignIn(LocalDate.of(year, monthOfYear, dayOfMonth));
+    default boolean isSignIn(int year, int month, int dayOfMonth) {
+        return this.isSignIn(LocalDate.of(year, month, dayOfMonth));
     }
 }
