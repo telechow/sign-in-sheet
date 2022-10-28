@@ -169,30 +169,10 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     }
 
     @Override
-    public List<LocalDate> listSignInDateInWholeYear() {
-        return this.sheetBitSet.stream()
-                .boxed()
-                .map(i -> LocalDate.ofYearDay(this.year, i + 1))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<LocalDateTime> listSignInDateTimeInWholeYear() {
         return this.sheetBitSet.stream()
                 .boxed()
                 .map(i -> LocalDateTime.of(LocalDate.ofYearDay(this.year, i + 1), LocalTime.MIN))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<LocalDate> listNotSignInDateInWholeYear() {
-        //1.克隆bitset并翻转
-        BitSet clone = this.cloneAndFlip(this.sheetBitSet);
-
-        //2.返回未签到的日期列表
-        return clone.stream()
-                .boxed()
-                .map(i -> LocalDate.ofYearDay(this.year, i + 1))
                 .collect(Collectors.toList());
     }
 
@@ -209,19 +189,6 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     }
 
     @Override
-    public List<LocalDate> listSignInDateInWholeMonth(int monthOfYear) {
-        //1.截取该月的bitset
-        BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
-
-        //2.过滤出结果
-        int offset = LocalDate.of(this.year, monthOfYear, 1).getDayOfYear();
-        return monthBitSet.stream()
-                .boxed()
-                .map(i -> LocalDate.ofYearDay(this.year, offset + i + 1))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<LocalDateTime> listSignInDateTimeInWholeMonth(int monthOfYear) {
         //1.截取该月的bitset
         BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
@@ -231,22 +198,6 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
         return monthBitSet.stream()
                 .boxed()
                 .map(i -> LocalDateTime.of(LocalDate.ofYearDay(this.year, offset + i + 1), LocalTime.MIN))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<LocalDate> listNotSignInDateInWholeMonth(int monthOfYear) {
-        //1.截取该月的bitset
-        BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
-
-        //2.克隆bitset并翻转
-        BitSet clone = this.cloneAndFlip(monthBitSet);
-
-        //3.过滤出结果
-        int offset = LocalDate.of(this.year, monthOfYear, 1).getDayOfYear();
-        return clone.stream()
-                .boxed()
-                .map(i -> LocalDate.ofYearDay(this.year, offset + i + 1))
                 .collect(Collectors.toList());
     }
 
