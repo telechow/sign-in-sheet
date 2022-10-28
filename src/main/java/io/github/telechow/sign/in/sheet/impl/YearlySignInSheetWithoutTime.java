@@ -213,8 +213,7 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     @Override
     public List<LocalDate> listNotSignInDateInWholeYear() {
         //1.克隆bitset并翻转
-        BitSet clone = (BitSet) this.sheetBitSet.clone();
-        clone.flip(0, clone.length());
+        BitSet clone = this.cloneAndFlip(this.sheetBitSet);
 
         //2.返回未签到的日期列表
         return clone.stream()
@@ -226,8 +225,7 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     @Override
     public List<LocalDateTime> listNotSignInDateTimeInWholeYear() {
         //1.克隆bitset并翻转
-        BitSet clone = (BitSet) this.sheetBitSet.clone();
-        clone.flip(0, clone.length());
+        BitSet clone = this.cloneAndFlip(this.sheetBitSet);
 
         //2.返回未签到的日期列表
         return clone.stream()
@@ -268,8 +266,7 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
         BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
 
         //2.克隆bitset并翻转
-        BitSet clone = (BitSet) monthBitSet.clone();
-        clone.flip(0, clone.length());
+        BitSet clone = this.cloneAndFlip(monthBitSet);
 
         //3.过滤出结果
         int offset = LocalDate.of(this.year, monthOfYear, 1).getDayOfYear();
@@ -285,8 +282,7 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
         BitSet monthBitSet = this.interceptBitSetByMonth(monthOfYear);
 
         //2.克隆bitset并翻转
-        BitSet clone = (BitSet) monthBitSet.clone();
-        clone.flip(0, clone.length());
+        BitSet clone = this.cloneAndFlip(monthBitSet);
 
         //3.过滤出结果
         int offset = LocalDate.of(this.year, monthOfYear, 1).getDayOfYear();
@@ -323,5 +319,20 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
         LocalDate firstDayOfMonth = yearMonth.atDay(1);
         LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
         return this.sheetBitSet.get(firstDayOfMonth.getDayOfYear() - 1, lastDayOfMonth.getDayOfYear());
+    }
+
+    /**
+     * 克隆并翻转一个BitSet<br>
+     * 例如：BitSet(0100100000)，翻转后得到BitSet(1011011111)
+     *
+     * @param bitSet 被克隆和翻转的BitSet
+     * @return java.util.BitSet 克隆并翻转后的BitSet
+     * @author Telechow
+     * @since 2022/10/28 17:56
+     */
+    private BitSet cloneAndFlip(BitSet bitSet) {
+        BitSet clone = (BitSet) bitSet.clone();
+        clone.flip(0, clone.length());
+        return clone;
     }
 }
