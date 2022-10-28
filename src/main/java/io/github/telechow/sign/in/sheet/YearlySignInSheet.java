@@ -35,7 +35,7 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 10:41
      */
-    int signInCountInWholeYear();
+    int countSignInDays();
 
     /**
      * 统计当前年度签到册中的未签到的次数
@@ -44,7 +44,7 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 10:42
      */
-    int notSignInCountInWholeYear();
+    int countNotSignInDays();
 
     /**
      * 统计指定月份的签到次数
@@ -54,7 +54,7 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 10:43
      */
-    int signInCountInWholeMonth(int month);
+    int countSignInDaysByMonth(int month);
 
     /**
      * 统计指定月份的未签到次数
@@ -64,7 +64,7 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 10:44
      */
-    int notSignInCountInWholeMonth(int month);
+    int countNotSignInDaysByMonth(int month);
 
     /**
      * 获取当前年度签到册中已签到的日期时间列表<br>
@@ -74,7 +74,7 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 16:36
      */
-    List<LocalDateTime> listSignInDateTimeInWholeYear();
+    List<LocalDateTime> listSignInDateTime();
 
     /**
      * 获取当前年度签到册中已签到的日期列表
@@ -83,8 +83,8 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 16:07
      */
-    default List<LocalDate> listSignInDateInWholeYear() {
-        return this.listSignInDateTimeInWholeYear().stream()
+    default List<LocalDate> listSignInDate() {
+        return this.listSignInDateTime().stream()
                 .map(LocalDateTime::toLocalDate)
                 .collect(Collectors.toList());
     }
@@ -97,7 +97,7 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 16:38
      */
-    List<LocalDateTime> listNotSignInDateTimeInWholeYear();
+    List<LocalDateTime> listNotSignInDateTime();
 
     /**
      * 获取当前年度签到册中未签到的日期列表
@@ -106,8 +106,8 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 16:12
      */
-    default List<LocalDate> listNotSignInDateInWholeYear() {
-        return this.listNotSignInDateTimeInWholeYear().stream()
+    default List<LocalDate> listNotSignInDate() {
+        return this.listNotSignInDateTime().stream()
                 .map(LocalDateTime::toLocalDate)
                 .collect(Collectors.toList());
     }
@@ -121,7 +121,7 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 17:26
      */
-    List<LocalDateTime> listSignInDateTimeInWholeMonth(int month);
+    List<LocalDateTime> listSignInDateTimeByMonth(int month);
 
     /**
      * 获取签到册中指定月份已签到的日期列表
@@ -131,8 +131,8 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 17:21
      */
-    default List<LocalDate> listSignInDateInWholeMonth(int month) {
-        return this.listSignInDateTimeInWholeMonth(month).stream()
+    default List<LocalDate> listSignInDateByMonth(int month) {
+        return this.listSignInDateTimeByMonth(month).stream()
                 .map(LocalDateTime::toLocalDate)
                 .collect(Collectors.toList());
     }
@@ -145,7 +145,7 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 17:30
      */
-    List<LocalDateTime> listNotSignInDateTimeInWholeMonth(int month);
+    List<LocalDateTime> listNotSignInDateTimeByMonth(int month);
 
     /**
      * 获取签到册中指定月份未签到的日期列表
@@ -155,8 +155,8 @@ public interface YearlySignInSheet extends SignInSheet {
      * @author Telechow
      * @since 2022/10/28 17:28
      */
-    default List<LocalDate> listNotSignInDateInWholeMonth(int month) {
-        return this.listNotSignInDateTimeInWholeMonth(month).stream()
+    default List<LocalDate> listNotSignInDateByMonth(int month) {
+        return this.listNotSignInDateTimeByMonth(month).stream()
                 .map(LocalDateTime::toLocalDate)
                 .collect(Collectors.toList());
     }

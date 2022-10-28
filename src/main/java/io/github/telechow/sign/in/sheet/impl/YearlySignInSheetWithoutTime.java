@@ -143,18 +143,18 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     }
 
     @Override
-    public int signInCountInWholeYear() {
+    public int countSignInDays() {
         return this.sheetBitSet.cardinality();
     }
 
     @Override
-    public int notSignInCountInWholeYear() {
+    public int countNotSignInDays() {
         //当年未签到次数 = 当年天数 - 当年已签到次数
-        return Year.of(this.year).length() - this.sheetBitSet.cardinality();
+        return Year.of(this.year).length() - this.countSignInDays();
     }
 
     @Override
-    public int signInCountInWholeMonth(int month) {
+    public int countSignInDaysByMonth(int month) {
         //1.截取该月的bitset
         BitSet monthBitSet = this.interceptBitSetByMonth(month);
 
@@ -163,13 +163,13 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     }
 
     @Override
-    public int notSignInCountInWholeMonth(int month) {
+    public int countNotSignInDaysByMonth(int month) {
         //当月未签到次数 = 当月天数 - 当月已签到次数
-        return YearMonth.of(this.year, month).lengthOfMonth() - this.signInCountInWholeMonth(month);
+        return YearMonth.of(this.year, month).lengthOfMonth() - this.countSignInDaysByMonth(month);
     }
 
     @Override
-    public List<LocalDateTime> listSignInDateTimeInWholeYear() {
+    public List<LocalDateTime> listSignInDateTime() {
         return this.sheetBitSet.stream()
                 .boxed()
                 .map(i -> LocalDateTime.of(LocalDate.ofYearDay(this.year, i + 1), LocalTime.MIN))
@@ -177,7 +177,7 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     }
 
     @Override
-    public List<LocalDateTime> listNotSignInDateTimeInWholeYear() {
+    public List<LocalDateTime> listNotSignInDateTime() {
         //1.克隆bitset并翻转
         BitSet clone = this.cloneAndFlip(this.sheetBitSet);
 
@@ -189,7 +189,7 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     }
 
     @Override
-    public List<LocalDateTime> listSignInDateTimeInWholeMonth(int month) {
+    public List<LocalDateTime> listSignInDateTimeByMonth(int month) {
         //1.截取该月的bitset
         BitSet monthBitSet = this.interceptBitSetByMonth(month);
 
@@ -202,7 +202,7 @@ public class YearlySignInSheetWithoutTime implements YearlySignInSheet, SignInSh
     }
 
     @Override
-    public List<LocalDateTime> listNotSignInDateTimeInWholeMonth(int month) {
+    public List<LocalDateTime> listNotSignInDateTimeByMonth(int month) {
         //1.截取该月的bitset
         BitSet monthBitSet = this.interceptBitSetByMonth(month);
 
