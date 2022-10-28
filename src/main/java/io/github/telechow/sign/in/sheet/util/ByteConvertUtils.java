@@ -102,4 +102,68 @@ public class ByteConvertUtils {
         }
         return values;
     }
+
+    /**
+     * 将 短整型 转换成 字节数组<br>
+     * 默认以小端序转换<br>
+     *
+     * @param shortValue 短整型数据
+     * @return byte[] 字节数组
+     * @author Telechow
+     * @since 2022/10/28 11:29
+     */
+    public static byte[] shortToBytes(short shortValue) {
+        return shortToBytes(shortValue, ByteOrder.LITTLE_ENDIAN);
+    }
+
+    /**
+     * 将 短整型 转换成 字节数组<br>
+     *
+     * @param shortValue 短整型数据
+     * @param byteOrder  端序
+     * @return byte[] 字节数组
+     * @author Telechow
+     * @since 2022/10/28 11:30
+     */
+    public static byte[] shortToBytes(short shortValue, ByteOrder byteOrder) {
+        byte[] b = new byte[Short.BYTES];
+        if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
+            b[0] = (byte) (shortValue & 0xff);
+            b[1] = (byte) ((shortValue >> Byte.SIZE) & 0xff);
+        } else {
+            b[1] = (byte) (shortValue & 0xff);
+            b[0] = (byte) ((shortValue >> Byte.SIZE) & 0xff);
+        }
+        return b;
+    }
+
+    /**
+     * 将 字节数组 转换成 短整型<br>
+     * 默认以小端序转换<br>
+     *
+     * @param bytes 字节数组
+     * @return short 短整型数据
+     * @author Telechow
+     * @since 2022/10/28 14:33
+     */
+    public static short bytesToShort(byte[] bytes) {
+        return bytesToShort(bytes, ByteOrder.LITTLE_ENDIAN);
+    }
+
+    /**
+     * 将 字节数组 转换成 短整型<br>
+     *
+     * @param bytes     字节数组
+     * @param byteOrder 端序
+     * @return short 短整型数据
+     * @author Telechow
+     * @since 2022/10/28 14:34
+     */
+    public static short bytesToShort(byte[] bytes, ByteOrder byteOrder) {
+        if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
+            return (short) (bytes[0] & 0xff | (bytes[1] & 0xff) << Byte.SIZE);
+        } else {
+            return (short) (bytes[1] & 0xff | (bytes[0] & 0xff) << Byte.SIZE);
+        }
+    }
 }
